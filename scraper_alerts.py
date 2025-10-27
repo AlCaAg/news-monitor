@@ -19,16 +19,16 @@ def check_news():
         response = requests.get(URL, timeout=10)
         soup = BeautifulSoup(response.text, 'html.parser')
         text = soup.get_text().lower()
-        print("Texto extraído:", text)
         for kw in KEYWORDS:
             if kw.lower() in text:
-                send_telegram_alert(f"Palabra clave encontrada: {kw}\nURL: {URL}")
+                print("Palabra clave encontrada: ", kw)
+                #send_telegram_alert(f"Palabra clave encontrada: {kw}\nURL: {URL}")
             else:
                 print("Palabra clave no encontrada: ", kw)
-                send_telegram_alert(f"Palabra clave no encontrada: {kw}\nURL: {URL}")
+                #send_telegram_alert(f"Palabra clave no encontrada: {kw}\nURL: {URL}")
         print("Fin del scraper.")
     except Exception as e:
-        send_telegram_alert(f"Error en el scraper: {e}")
+        #send_telegram_alert(f"Error en el scraper: {e}")
         print("Error en el scraper: ", e)
 
 if __name__ == "__main__":
