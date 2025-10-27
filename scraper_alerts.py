@@ -28,7 +28,7 @@ def check_news():
                 send_telegram_alert(f"⚠️ Palabra clave no encontrada: {kw}\nURL: {URL}")
         print("Fin del scraper.")
     except Exception as e:
-        send_telegram_alert(f"⚠️ Error en el scraper: {e}")
+        # send_telegram_alert(f"⚠️ Error en el scraper: {e}")
         print("Error en el scraper: ", e)
 
 if __name__ == "__main__":
