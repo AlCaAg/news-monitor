@@ -3,95 +3,113 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 
-# Configurar logs
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
-# Configuración general
+# =======================
+# 🔧 CONFIGURACIÓN
+# =======================
 URL = os.getenv("URL")
-KEYWORDS = os.getenv("KEYWORDS").split(",")
+KEYWORDS = [k.strip().lower() for k in os.getenv("KEYWORDS", "").split(",")]
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 CACHE_FILE = "sent_alerts.txt"
 
+# =======================
+# 🧰 LOGGING CONFIG
+# =======================
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
-def send_telegram_alert(message):
-    """Envía un mensaje al chat de Telegram."""
-    try:
-        api_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-        data = {"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"}
-        response = requests.post(api_url, data=data, timeout=10)
-        logging.info(f"📤 Enviando mensaje a Telegram...")
-        logging.info(f"Status code: {response.status_code}")
-        logging.info(f"Response: {response.text}")
-        if response.status_code == 200:
-            logging.info("✅ Mensaje enviado correctamente.")
-        else:
-            logging.warning("⚠️ No se pudo enviar el mensaje.")
-    except Exception as e:
-        logging.error(f"Error enviando alerta a Telegram: {e}")
-
-
-def load_sent_alerts():
-    """Carga las URLs ya notificadas."""
+# =======================
+# 🧠 FUNCIONES AUXILIARES
+# =======================
+def load_cache():
+    """Carga las URLs ya notificadas para evitar duplicados."""
     if not os.path.exists(CACHE_FILE):
         return set()
     with open(CACHE_FILE, "r", encoding="utf-8") as f:
-        return set(line.strip() for line in f.readlines())
+        return set(line.strip() for line in f if line.strip())
 
+def save_cache(cache):
+    """Guarda las URLs notificadas."""
+    with open(CACHE_FILE, "w", encoding="utf-8") as f:
+        for url in cache:
+            f.write(url + "\n")
 
-def save_sent_alert(url):
-    """Guarda la URL de una noticia ya notificada."""
-    with open(CACHE_FILE, "a", encoding="utf-8") as f:
-        f.write(url + "\n")
+def send_telegram_message(text):
+    """Envía mensaje al canal de Telegram."""
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        logging.error("❌ TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID no configurados")
+        return
 
+    endpoint = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML"}
+    response = requests.post(endpoint, data=payload)
+    if response.status_code != 200:
+        logging.error(f"⚠️ Error enviando mensaje: {response.status_code} - {response.text}")
 
-def check_news():
-    """Scrapea la página y busca coincidencias de palabras clave en URLs."""
-    logging.info(f"🔍 Analizando sitio: {URL}")
-    logging.info(f"Palabras claves configuradas: {KEYWORDS}")
-
-    sent_alerts = load_sent_alerts()
-
+def get_all_urls(site_url):
+    """Obtiene todas las URLs de la página especificada."""
     try:
-        response = requests.get(URL, timeout=10)
+        response = requests.get(site_url, timeout=15)
         response.raise_for_status()
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        articles = soup.select("div.td_module_flex a[href]")
-        found = False
-
-        for a_tag in articles:
-            href = a_tag["href"]
-            title = a_tag.get("title", href)
-            lower_href = href.lower()
-
-            # Buscar palabra clave en URL
-            for kw in KEYWORDS:
-                if kw.lower() in lower_href:
-                    if href in sent_alerts:
-                        logging.info(f"⏭️ Ya se notificó esta URL: {href}")
-                    else:
-                        found = True
-                        message = (
-                            f"📰 <b>Nueva noticia detectada</b>\n\n"
-                            f"🔎 <b>Palabra clave:</b> <code>{kw}</code>\n"
-                            f"🧾 <b>Título:</b> {title}\n"
-                            f"🌐 <b>Enlace:</b> {href}\n\n"
-                            f"🕒 <i>Detectado automáticamente por tu bot</i>"
-                        )
-                        send_telegram_alert(message)
-                        save_sent_alert(href)
-                        logging.info(f"✅ Noticia enviada: {href}")
-
-        if not found:
-            logging.info("😴 No se encontraron coincidencias nuevas.")
-
     except Exception as e:
-        logging.error(f"Error al analizar la página: {e}")
-        send_telegram_alert(f"⚠️ <b>Error en el scraper:</b> {e}")
+        logging.error(f"❌ Error al obtener {site_url}: {e}")
+        return []
 
+    soup = BeautifulSoup(response.text, "html.parser")
+    urls = set()
 
-if __name__ == "__main__":
+    # Extrae todos los enlaces válidos
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        if href.startswith("http"):
+            urls.add(href)
+        elif href.startswith("/"):
+            base = site_url.rstrip("/")
+            urls.add(base + href)
+
+    logging.info(f"🔗 Se encontraron {len(urls)} URLs en {site_url}")
+    return list(urls)
+
+# =======================
+# 🚀 FUNCIÓN PRINCIPAL
+# =======================
+def main():
     logging.info("🚀 Iniciando ejecución del scraper...")
-    check_news()
-    logging.info("✅ Ejecución completada.")
+    if not URL or not KEYWORDS:
+        logging.error("❌ Variables de entorno URL o KEYWORDS no configuradas.")
+        return
+
+    logging.info(f"🔍 Analizando sitio: {URL}")
+    logging.info(f"🧩 Palabras clave: {KEYWORDS}")
+
+    cache = load_cache()
+    urls = get_all_urls(URL)
+    new_alerts = []
+
+    for link in urls:
+        link_lower = link.lower()
+        # Revisa TODAS las palabras clave
+        if any(keyword in link_lower for keyword in KEYWORDS):
+            if link not in cache:
+                new_alerts.append(link)
+                cache.add(link)
+
+    if new_alerts:
+        for url in new_alerts:
+            message = f"📰 <b>Noticia detectada:</b>\n{url}"
+            send_telegram_message(message)
+            logging.info(f"📢 Enviada alerta: {url}")
+        save_cache(cache)
+        logging.info(f"✅ {len(new_alerts)} nuevas alertas enviadas.")
+    else:
+        logging.info("😴 No se encontraron coincidencias nuevas.")
+
+    logging.info("🏁 Ejecución completada.")
+
+# =======================
+# 🏃‍♂️ EJECUCIÓN
+# =======================
+if __name__ == "__main__":
+    main()
