@@ -8,8 +8,8 @@ import hashlib
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Configuración general
-URL = os.getenv("URL", "https://mioriente.com/")
-KEYWORDS = os.getenv("KEYWORDS", "medellin,guatape,epm,metro,ivan,cepeda").split(",")
+URL = os.getenv("URL")
+KEYWORDS = os.getenv("KEYWORDS").split(",")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 CACHE_FILE = "sent_alerts.txt"
