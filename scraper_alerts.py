@@ -13,6 +13,14 @@ def send_telegram_alert(message):
     data = {"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"}
     requests.post(url, data=data)
 
+    print(f"Status code: {response.status_code}")
+    print(f"Response text: {response.text}")
+
+    if response.status_code == 200:
+        print("Alerta enviada correctamente a Telegram.")
+    else:
+        print("No se pudo enviar alerta, revisar respuesta anterior.")
+
 def check_news():
     print("Iniciando scraper...")
     try:
@@ -21,10 +29,10 @@ def check_news():
         text = soup.get_text().lower()
         for kw in KEYWORDS:
             if kw.lower() in text:
-                print("Palabra clave encontrada: ", kw)
+                print(f"Palabra clave encontrada: {kw}\nURL: {URL}")
                 #send_telegram_alert(f"Palabra clave encontrada: {kw}\nURL: {URL}")
             else:
-                print("Palabra clave no encontrada: ", kw)
+                print(f"Palabra clave no encontrada: {kw}\nURL: {URL}")
                 #send_telegram_alert(f"Palabra clave no encontrada: {kw}\nURL: {URL}")
         print("Fin del scraper.")
     except Exception as e:
