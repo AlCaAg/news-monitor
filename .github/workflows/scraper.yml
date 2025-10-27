@@ -39,8 +39,8 @@ jobs:
 
       - name: 🚀 Ejecutar scraper de noticias
         env:
-          URL: https://mioriente.com/
-          KEYWORDS: medellin,guatape,epm,metro,ivan,cepeda
+          URL: ${{ secrets.URL }}
+          KEYWORDS: ${{ secrets.KEYWORDS }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python scraper_alerts.py

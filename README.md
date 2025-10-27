@@ -11,8 +11,3 @@ Scraper que revisa una página web cada 30 minutos y envía alertas por Telegram
    - `URL`
    - `KEYWORDS`
 3. GitHub ejecutará automáticamente el scraper cada 30 minutos.
-
-## ⚙️ Variables opcionales
-- `CHECK_INTERVAL_SECONDS`: no se usa en GitHub Actions, ya que el cron está en el workflow.
-- `URL`: página web a monitorear.
-- `KEYWORDS`: palabras clave separadas por coma.
