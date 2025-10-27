@@ -39,8 +39,8 @@ jobs:
 
       - name: 🚀 Ejecutar scraper de noticias
         env:
-          URL: ${{ secrets.URL }}
-          KEYWORDS: ${{ secrets.KEYWORDS }}
+          URL: ${{ vars.URL }}
+          KEYWORDS: ${{ vars.KEYWORDS }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python scraper_alerts.py
