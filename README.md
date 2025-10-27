@@ -1,7 +1,18 @@
-# 📰 News Monitor + Telegram Alerts
+# 📰 News Scraper for GitHub Actions
 
-Monitoriza una página web y canales de Telegram en busca de palabras clave y envía alertas por Telegram.
+Scraper que revisa una página web cada 30 minutos y envía alertas por Telegram si encuentra alguna palabra clave.
 
-## Componentes
-- **scraper_alerts.py** → revisa una página cada X minutos.
-- **tele_channel_monitor.py** → escucha mensajes en tiempo real en canales de Telegram.
+## 🚀 Cómo configurarlo en GitHub Actions
+
+1. Sube este repo a tu cuenta de GitHub.
+2. Ve a **Settings → Secrets → Actions** y crea los siguientes secretos:
+   - `TELEGRAM_BOT_TOKEN`
+   - `TELEGRAM_CHAT_ID`
+   - `URL`
+   - `KEYWORDS`
+3. GitHub ejecutará automáticamente el scraper cada 30 minutos.
+
+## ⚙️ Variables opcionales
+- `CHECK_INTERVAL_SECONDS`: no se usa en GitHub Actions, ya que el cron está en el workflow.
+- `URL`: página web a monitorear.
+- `KEYWORDS`: palabras clave separadas por coma.

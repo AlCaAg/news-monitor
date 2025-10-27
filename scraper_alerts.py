@@ -1,5 +1,4 @@
 import os
-import time
 import requests
 from bs4 import BeautifulSoup
 
@@ -7,7 +6,6 @@ URL = os.getenv("URL", "https://www.ejemplo.com/noticias")
 KEYWORDS = os.getenv("KEYWORDS", "colombia,economía,bitcoin").split(",")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-CHECK_INTERVAL_SECONDS = int(os.getenv("CHECK_INTERVAL_SECONDS", "1800"))
 
 def send_telegram_alert(message):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
@@ -27,6 +25,4 @@ def check_news():
         send_telegram_alert(f"⚠️ Error en el scraper: {e}")
 
 if __name__ == "__main__":
-    while True:
-        check_news()
-        time.sleep(CHECK_INTERVAL_SECONDS)
+    check_news()
