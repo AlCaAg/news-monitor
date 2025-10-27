@@ -24,16 +24,16 @@ logging.basicConfig(
 # 🧠 FUNCIONES AUXILIARES
 # =======================
 def load_cache():
-    """Carga las URLs ya notificadas para evitar duplicados."""
+    """Carga URLs ya enviadas desde el archivo de caché"""
     if not os.path.exists(CACHE_FILE):
         return set()
     with open(CACHE_FILE, "r", encoding="utf-8") as f:
         return set(line.strip() for line in f if line.strip())
 
-def save_cache(cache):
-    """Guarda las URLs notificadas."""
+def save_cache(sent_urls):
+    """Guarda las URLs actualizadas en el archivo de caché"""
     with open(CACHE_FILE, "w", encoding="utf-8") as f:
-        for url in cache:
+        for url in sorted(sent_urls):
             f.write(url + "\n")
 
 def send_telegram_message(text):
