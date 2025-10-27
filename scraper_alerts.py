@@ -2,7 +2,6 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import logging
-import hashlib
 
 # Configurar logs
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

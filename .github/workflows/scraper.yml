@@ -24,6 +24,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
 
+      - name: 🪶 Crear archivo de cache si no existe
+        run: |
+          if [ ! -f sent_alerts.txt ]; then
+            echo "Creando archivo sent_alerts.txt vacío..."
+            touch sent_alerts.txt
+          fi
+
       - name: 💾 Restaurar cache de alertas enviadas
         uses: actions/cache@v3
         with:
