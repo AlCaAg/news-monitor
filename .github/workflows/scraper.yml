@@ -8,6 +8,8 @@ on:
 jobs:
   run-scraper:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 🔥 Permite hacer commit y push
 
     steps:
       # 1️⃣ Clona el repo completo (necesario para poder hacer commits)
