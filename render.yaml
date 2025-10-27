@@ -1,0 +1,34 @@
+services:
+  - type: worker
+    name: news-scraper
+    env: python
+    startCommand: python scraper_alerts.py
+    plan: free
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: URL
+        sync: false
+      - key: KEYWORDS
+        sync: false
+      - key: CHECK_INTERVAL_SECONDS
+        sync: false
+
+  - type: worker
+    name: telegram-channel-monitor
+    env: python
+    startCommand: python tele_channel_monitor.py
+    plan: free
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: TG_API_ID
+        sync: false
+      - key: TG_API_HASH
+        sync: false
+      - key: CHANNELS
+        sync: false
