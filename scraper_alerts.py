@@ -11,7 +11,7 @@ def send_telegram_alert(message):
     print("Enviando alerta...")
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     data = {"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "HTML"}
-    requests.post(url, data=data)
+    response  = requests.post(url, data=data, timeout=10)
 
     print(f"Status code: {response.status_code}")
     print(f"Response text: {response.text}")
