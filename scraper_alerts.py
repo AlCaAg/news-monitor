@@ -29,14 +29,14 @@ def check_news():
         text = soup.get_text().lower()
         for kw in KEYWORDS:
             if kw.lower() in text:
-                print(f"Palabra clave encontrada: {kw}\nURL: {URL}")
-                #send_telegram_alert(f"Palabra clave encontrada: {kw}\nURL: {URL}")
+                print(f"Palabra clave encontrada: {kw}")
+                send_telegram_alert(f"Palabra clave encontrada: {kw}\nURL: {URL}")
             else:
-                print(f"Palabra clave no encontrada: {kw}\nURL: {URL}")
-                #send_telegram_alert(f"Palabra clave no encontrada: {kw}\nURL: {URL}")
+                print(f"Palabra clave no encontrada: {kw}")
+                send_telegram_alert(f"Palabra clave no encontrada: {kw}\nURL: {URL}")
         print("Fin del scraper.")
     except Exception as e:
-        #send_telegram_alert(f"Error en el scraper: {e}")
+        send_telegram_alert(f"Error en el scraper: {e}")
         print("Error en el scraper: ", e)
 
 if __name__ == "__main__":
