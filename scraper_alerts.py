@@ -72,7 +72,7 @@ def main():
             
             # Send alerts and update cache
             for url in new_matches:
-                message = f"📰 <b>New match found!</b>\n{url}"
+                message = f"📰 <b>Noticia detectada:</b>\n{url}"
                 if send_telegram_message(message):
                     cache.add(url)
                     logging.info(f"📤 Sent alert: {url}")
