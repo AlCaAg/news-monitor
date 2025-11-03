@@ -26,7 +26,7 @@ def setup_logger(name=__name__):
         # Configurar el formateador
         formatter = ColombiaTimeFormatter(
             fmt='%(asctime)s - %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S %Z%z'
+            datefmt='%Y-%m-%d %H:%M:%S'
         )
         console_handler.setFormatter(formatter)
         
