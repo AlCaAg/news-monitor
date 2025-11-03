@@ -25,5 +25,5 @@ def send_telegram_message(text: str) -> bool:
         response.raise_for_status()
         return True
     except requests.exceptions.RequestException as e:
-        logger.error(f"⚠️ Error sending Telegram message: {e}")
+        logger.error(f"⚠️ Error enviando mensaje de Telegram: {e}")
         return False

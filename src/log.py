@@ -20,9 +20,7 @@ def setup_logger(name=__name__):
     # Evitar que los mensajes se propaguen al logger raíz
     logger.propagate = False
     
-    # Si ya tiene manejadores, no añadir más
     if not logger.handlers:
-        # Crear manejador para la consola
         console_handler = logging.StreamHandler()
         
         # Configurar el formateador
@@ -32,10 +30,9 @@ def setup_logger(name=__name__):
         )
         console_handler.setFormatter(formatter)
         
-        # Añadir el manejador al logger
         logger.addHandler(console_handler)
     
     return logger
 
-# Logger por defecto
+
 logger = setup_logger()

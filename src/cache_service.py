@@ -11,7 +11,7 @@ def load_cache() -> Set[str]:
         with open(CACHE_FILE, "r", encoding="utf-8") as f:
             return {line.strip() for line in f if line.strip()}
     except Exception as e:
-        logger.error(f"⚠️ Error loading cache: {e}")
+        logger.error(f"⚠️ Error cargando la caché: {e}")
         return set()
 
 def save_cache(sent_urls: Set[str]) -> None:
@@ -21,4 +21,4 @@ def save_cache(sent_urls: Set[str]) -> None:
             for url in sorted(sent_urls):
                 f.write(url + "\n")
     except Exception as e:
-        logger.error(f"⚠️ Error saving cache: {e}")
+        logger.error(f"⚠️ Error guardando la caché: {e}")

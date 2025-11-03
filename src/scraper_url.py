@@ -19,7 +19,7 @@ def get_all_urls(site_url: str, keywords: List[str] = None) -> List[str]:
         response = requests.get(site_url, timeout=15)
         response.raise_for_status()
     except Exception as e:
-        logger.error(f"❌ Error fetching {site_url}: {e}")
+        logger.error(f"❌ Error obteniendo {site_url}: {e}")
         return []
 
     soup = BeautifulSoup(response.text, "html.parser")
@@ -45,5 +45,5 @@ def get_all_urls(site_url: str, keywords: List[str] = None) -> List[str]:
         if any(keyword.lower() in href_lower for keyword in keywords):
             urls.add(href)
 
-    logger.info(f"🔗 Found {len(urls)} URLs in {site_url}")
+    logger.info(f"🔗 Se encontraron {len(urls)} URLs en {site_url}")
     return list(urls)

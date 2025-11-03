@@ -14,6 +14,6 @@ def validate_config() -> bool:
     missing = [var for var in required_vars if not globals().get(var)]
     
     if missing:
-        logger.error(f"❌ Missing required environment variables: {', '.join(missing)}")
+        logger.error(f"❌ Faltan variables de entorno requeridas: {', '.join(missing)}")
         return False
     return True
