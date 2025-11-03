@@ -1,5 +1,5 @@
 import os
-from typing import List
+from .log import logger
 
 # Load environment variables
 URL = os.getenv("URL")
@@ -14,6 +14,6 @@ def validate_config() -> bool:
     missing = [var for var in required_vars if not globals().get(var)]
     
     if missing:
-        print(f"❌ Missing required environment variables: {', '.join(missing)}")
+        logger.error(f"❌ Missing required environment variables: {', '.join(missing)}")
         return False
     return True

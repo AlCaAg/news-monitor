@@ -1,6 +1,5 @@
 import requests
-import logging
-from typing import Optional
+from .log import logger
 from .config import TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 
 def send_telegram_message(text: str) -> bool:
@@ -26,5 +25,5 @@ def send_telegram_message(text: str) -> bool:
         response.raise_for_status()
         return True
     except requests.exceptions.RequestException as e:
-        logging.error(f"⚠️ Error sending Telegram message: {e}")
+        logger.error(f"⚠️ Error sending Telegram message: {e}")
         return False
