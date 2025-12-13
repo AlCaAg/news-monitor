@@ -13,6 +13,26 @@ from src.telegram_sender import send_telegram_message
 from src.cache_service import load_cache, save_cache
 
 
+def format_url_display(url: str) -> str:
+    """
+    Format a URL for display by extracting the last part and removing any file extensions.
+    
+    Args:
+        url: The URL to format
+        
+    Returns:
+        Formatted display text for the URL
+    """
+    # Remove trailing slashes and split into parts
+    url_parts = url.rstrip('/').split('/')
+    if not url_parts:
+        return 'enlace'
+        
+    # Get the last part of the URL and split by dot
+    last_part = url_parts[-1]
+    return last_part.split('.')[0] if '.' in last_part else last_part
+
+
 def find_new_matches(urls: List[str], keywords: List[str], cache: Set[str]) -> List[str]:
     """
     Find URLs that match any of the keywords and haven't been seen before.
@@ -66,7 +86,9 @@ def main():
             
             # Send alerts and update cache
             for url in new_matches:
-                message = f"📰 <b>Noticia detectada:</b>\n{url}"
+                # Format the URL for display
+                display_text = format_url_display(url)
+                message = f"📰 <b>Noticia detectada:</b>\n<a href='{url}'>{display_text}</a>"
                 if send_telegram_message(message):
                     cache.add(url)
                     logger.info(f"📤 Alerta enviada: {url}")
