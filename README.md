@@ -5,9 +5,10 @@ Scraper que revisa una página web cada 30 minutos y envía alertas por Telegram
 ## 🚀 Cómo configurarlo en GitHub Actions
 
 1. Sube este repo a tu cuenta de GitHub.
-2. Ve a **Settings → Secrets → Actions** y crea los siguientes secretos:
+2. Ve a **Settings → Secrets and variables → Actions** y crea los siguientes secretos:
    - `TELEGRAM_BOT_TOKEN`
    - `TELEGRAM_CHAT_ID`
+3. Ve a **Settings → Secrets asd variables → Actions** y crea las siguientes variables:
    - `URL`
    - `KEYWORDS`
-3. GitHub ejecutará automáticamente el scraper cada 30 minutos.
+4. GitHub ejecutará automáticamente el scraper cada 30 minutos.
